@@ -9,6 +9,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 public class SSRFShowManageImpl extends BaseSSRFShowManagerImpl implements SSRFShowManager {
 
@@ -29,6 +33,10 @@ public class SSRFShowManageImpl extends BaseSSRFShowManagerImpl implements SSRFS
         super.doConnect(url, new SsrfClient() {
             @Override
             protected void doConnect(String url) {
+                if (!isUrlAllowed(url)) {
+                    System.err.println("Blocked SSRF attempt to: " + url);
+                    return;
+                }
                 CloseableHttpClient httpclient = HttpClients.createDefault();
                 HttpGet httpget = new HttpGet(url);
                 CloseableHttpResponse response = null;
@@ -65,6 +73,10 @@ public class SSRFShowManageImpl extends BaseSSRFShowManagerImpl implements SSRFS
         SsrfClient ssrfClient = new SsrfClient() {
             @Override
             protected void doConnect(String url) {
+                if (!isUrlAllowed(url)) {
+                    System.err.println("Blocked SSRF attempt to: " + url);
+                    return;
+                }
                 CloseableHttpClient httpclient = HttpClients.createDefault();
                 HttpGet httpget = new HttpGet(url);
                 CloseableHttpResponse response = null;
