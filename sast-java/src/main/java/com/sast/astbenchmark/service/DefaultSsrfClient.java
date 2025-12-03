@@ -25,6 +25,7 @@ public class DefaultSsrfClient extends SsrfClient {
                 System.err.println(result);
             }
         } catch (IOException ioe) {
+            int a = 1;
             ioe.printStackTrace();
         } finally {
             try {
