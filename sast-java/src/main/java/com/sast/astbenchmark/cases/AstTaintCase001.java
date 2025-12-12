@@ -959,9 +959,18 @@ public class AstTaintCase001 {
     @GetMapping("case0156/{url}")
     public Map<String, Object> aTaintCase0156(@PathVariable String url) {
         Map<String, Object> modelMap = new HashMap<>();
+        // Define allowlist of accepted hostnames (add your allowed hosts here)
+        Set<String> allowedHosts = new HashSet<>(Arrays.asList(
+            "example.com", "api.example.com" // REPLACE with hosts you trust
+        ));
         try {
-
             URL realUrl = new URL(url);
+            String host = realUrl.getHost();
+            if (!allowedHosts.contains(host)) {
+                modelMap.put("status", "error");
+                modelMap.put("message", "Host not allowed");
+                return modelMap;
+            }
             HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
             connection.setRequestMethod("GET");
             connection.getResponseMessage();
